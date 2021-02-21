@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Platine Framework
+ * Platine Cache
  *
- * Platine is a lightweight, high-performance, simple and elegant PHP Web framework
+ * Platine Cache is the implementation of PSR 16 simple cache
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2020 Platine Framework
+ * Copyright (c) 2020 Platine Cache
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@
  *
  *  The Cache Driver using filesystem to manage the cache data
  *
- *  @package    core
+ *  @package    Platine\Cache
  *  @author Platine Developers Team
  *  @copyright  Copyright (c) 2020
  *  @license    http://opensource.org/licenses/MIT  MIT License
