@@ -16,7 +16,7 @@
 ### Installation
 #### Using composer (recommended)
 ```bash
-composer require --dev platine-php/cache
+composer require platine-php/cache
 ```
 
 ### Supported drivers 
