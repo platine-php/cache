@@ -141,7 +141,10 @@ class FileCache extends AbstractCache
         } elseif ($ttl instanceof \DateInterval) {
             $ttl = $this->convertDateIntervalToSeconds($ttl);
         } elseif (!is_int($ttl)) {
-            throw new CacheException(sprintf('Invalid cache TTL [%s] ', print_r($ttl, true)));
+            throw new CacheException(sprintf(
+                'Invalid cache TTL value expected null|int|DateInterval but got [%s]',
+                gettype($ttl)
+            ));
         }
         /** @var int */
         $expireAt = time() + $ttl;
