@@ -7,8 +7,8 @@
 [![License](https://poser.pugx.org/platine-php/cache/license)](https://packagist.org/packages/platine-php/cache)
 [![Build Status](https://img.shields.io/travis/platine-php/cache/develop.svg?style=flat-square)](https://travis-ci.com/platine-php/cache)  
 [![Quality Score](https://img.shields.io/scrutinizer/g/platine-php/cache.svg?style=flat-square)](https://scrutinizer-ci.com/g/platine-php/cache)
-[![Maintainability](https://api.codeclimate.com/v1/badges/f65efb8398437c54961b/maintainability)](https://codeclimate.com/github/platine-php/cache/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/f65efb8398437c54961b/test_coverage)](https://codeclimate.com/github/platine-php/cache/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/8c328e254185b0fd98ae/maintainability)](https://codeclimate.com/github/platine-php/cache/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/8c328e254185b0fd98ae/test_coverage)](https://codeclimate.com/github/platine-php/cache/test_coverage)
 
 ### Requirements 
 - **PHP >= 7.4**, **PHP 8** 
@@ -19,7 +19,7 @@
 composer require --dev platine-php/cache
 ```
 
-### Supported drives 
+### Supported drivers 
 - **File**
 - **APCu**
 
