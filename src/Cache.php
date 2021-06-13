@@ -46,29 +46,114 @@ declare(strict_types=1);
 
 namespace Platine\Cache;
 
-class Cache
+use Platine\Cache\Exception\CacheException;
+use Platine\Cache\Storage\NullStorage;
+use Platine\Cache\Storage\StorageInterface;
+
+/**
+ * Class Cache
+ * @package Platine\Cache
+ */
+class Cache implements CacheInterface
 {
 
     /**
-     * The cache driver to use
-     * @var CacheInterface
+     * The cache storage to use
+     * @var StorageInterface
      */
-    protected CacheInterface $handler;
+    protected StorageInterface $storage;
 
     /**
      * Create new instance
-     * @param CacheInterface $handler the cache driver to use
+     * @param StorageInterface|null $storage the cache storage to use
      */
-    public function __construct(CacheInterface $handler)
+    public function __construct(?StorageInterface $storage = null)
     {
-        $this->handler = $handler;
+        $this->storage = $storage ?? new NullStorage();
     }
 
     /**
-     * Any method call will call handler methods
+     * Return the storage instance
+     * @return StorageInterface
      */
-    public function __call(string $method, array $args = []): void
+    public function getStorage(): StorageInterface
     {
-        $this->handler->{$method}(...$args);
+        return $this->storage;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clear(): bool
+    {
+        return $this->storage->clear();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete(string $key): bool
+    {
+        $this->validateKey($key);
+
+        return $this->storage->delete($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get(string $key, $default = null)
+    {
+        $this->validateKey($key);
+
+        return $this->storage->get($key, $default);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function has(string $key): bool
+    {
+        $this->validateKey($key);
+
+        return $this->storage->has($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function set(string $key, $value, $ttl = null): bool
+    {
+        $this->validateKey($key);
+
+        return $this->storage->set($key, $value, $ttl);
+    }
+
+    /**
+     * Validate the cache key
+     * @param  string $key the key name
+     * @return void
+     *
+     * @throws CacheException if key is invalid
+     */
+    protected function validateKey(string $key): void
+    {
+        //PSR-16 reserved caracters
+        $reservedPsr16Keys = '/\{|\}|\(|\)|\/|\\\\|\@|\:/u';
+
+        if ($key === '') {
+            throw new CacheException(
+                'Invalid cache key, can not be null or empty'
+            );
+        }
+
+        $matches = [];
+        if (preg_match($reservedPsr16Keys, $key, $matches)) {
+            throw new CacheException(sprintf(
+                'Invalid caracter [%s] in cache key [%s]',
+                $matches[0],
+                $key
+            ));
+        }
     }
 }

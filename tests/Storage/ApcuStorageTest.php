@@ -4,30 +4,20 @@ declare(strict_types=1);
 
 namespace Platine\Test\Cache;
 
-use Platine\Cache\ApcuCache;
+use DateInterval;
+use Platine\Cache\Configuration;
 use Platine\Cache\Exception\CacheException;
-use Platine\PlatineTestCase;
+use Platine\Cache\Storage\ApcuStorage;
+use Platine\Dev\PlatineTestCase;
 
 /**
- * ApcuCache class tests
+ * ApcuStorage class tests
  *
  * @group core
  * @group cache
  */
-class ApcuCacheTest extends PlatineTestCase
+class ApcuStorageTest extends PlatineTestCase
 {
-
-    public function testConstructorSetTtlDefaultValue(): void
-    {
-        global $mock_extension_loaded_to_true, $mock_ini_get_to_true;
-
-        $mock_extension_loaded_to_true = true;
-        $mock_ini_get_to_true = true;
-
-        $ac = new ApcuCache(50);
-        $fdttl = $this->getPrivateProtectedAttribute(ApcuCache::class, 'defaultTtl');
-        $this->assertEquals(50, $fdttl->getValue($ac));
-    }
 
     public function testConstructorExtensionIsNotLoaded(): void
     {
@@ -35,7 +25,10 @@ class ApcuCacheTest extends PlatineTestCase
 
         $mock_extension_loaded_to_false = true;
         $this->expectException(CacheException::class);
-        (new ApcuCache());
+
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        (new ApcuStorage($cfg));
     }
 
     public function testConstructorExtensionIstLoadedButNotEnabled(): void
@@ -46,7 +39,9 @@ class ApcuCacheTest extends PlatineTestCase
         $mock_ini_get_to_false = true;
 
         $this->expectException(CacheException::class);
-        (new ApcuCache());
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        (new ApcuStorage($cfg));
     }
 
     public function testGet(): void
@@ -58,7 +53,9 @@ class ApcuCacheTest extends PlatineTestCase
         $mock_extension_loaded_to_true = true;
         $mock_ini_get_to_true = true;
 
-        $ac = new ApcuCache();
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        $ac = new ApcuStorage($cfg);
 
         $mock_apcu_fetch_to_false = true;
         //Default value
@@ -82,8 +79,10 @@ class ApcuCacheTest extends PlatineTestCase
         $mock_extension_loaded_to_true = true;
         $mock_ini_get_to_true = true;
 
+        $cfg = $this->getMockInstance(Configuration::class);
+
         $key = uniqid();
-        $ac = new ApcuCache();
+        $ac = new ApcuStorage($cfg);
 
         $mock_apcu_exists_to_false = true;
 
@@ -108,7 +107,9 @@ class ApcuCacheTest extends PlatineTestCase
         $mock_ini_get_to_true = true;
         $mock_apcu_store_to_true = true;
 
-        $ac = new ApcuCache();
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        $ac = new ApcuStorage($cfg);
         $result = $ac->set($key, $data);
         $this->assertTrue($result);
     }
@@ -120,7 +121,9 @@ class ApcuCacheTest extends PlatineTestCase
         $mock_extension_loaded_to_true = true;
         $mock_ini_get_to_true = true;
 
-        $ac = new ApcuCache();
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        $ac = new ApcuStorage($cfg);
         $ac->set('key', 'data', []);
     }
 
@@ -137,8 +140,10 @@ class ApcuCacheTest extends PlatineTestCase
 
         $data = array('foo' => 'bar');
 
-        $ac = new ApcuCache();
-        $result = $ac->set($key, $data, new \DateInterval('PT4H'));
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        $ac = new ApcuStorage($cfg);
+        $result = $ac->set($key, $data, new DateInterval('PT4H'));
         $this->assertTrue($result);
     }
 
@@ -152,7 +157,9 @@ class ApcuCacheTest extends PlatineTestCase
         $mock_ini_get_to_true = true;
         $mock_apcu_store_to_false = true;
 
-        $ac = new ApcuCache();
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        $ac = new ApcuStorage($cfg);
         $result = $ac->set('key', 'data');
         $this->assertFalse($result);
     }
@@ -169,7 +176,9 @@ class ApcuCacheTest extends PlatineTestCase
 
         $key = uniqid();
 
-        $ac = new ApcuCache();
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        $ac = new ApcuStorage($cfg);
 
         $this->assertTrue($ac->delete($key));
     }
@@ -186,7 +195,9 @@ class ApcuCacheTest extends PlatineTestCase
 
         $key = uniqid();
 
-        $ac = new ApcuCache();
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        $ac = new ApcuStorage($cfg);
 
         $this->assertFalse($ac->delete($key));
     }
@@ -201,7 +212,9 @@ class ApcuCacheTest extends PlatineTestCase
         $mock_ini_get_to_true = true;
         $mock_apcu_clear_cache_to_false = true;
 
-        $ac = new ApcuCache();
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        $ac = new ApcuStorage($cfg);
 
         $this->assertFalse($ac->clear());
     }
@@ -216,7 +229,9 @@ class ApcuCacheTest extends PlatineTestCase
         $mock_ini_get_to_true = true;
         $mock_apcu_clear_cache_to_true = true;
 
-        $ac = new ApcuCache();
+        $cfg = $this->getMockInstance(Configuration::class);
+
+        $ac = new ApcuStorage($cfg);
 
         $this->assertTrue($ac->clear());
     }

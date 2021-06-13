@@ -29,11 +29,11 @@
  */
 
 /**
- *  @file CacheInterface.php
+ *  @file StorageInterface.php
  *
- *  The CacheInterface interface
+ *  The cache storage interface
  *
- *  @package    Platine\Cache
+ *  @package    Platine\Cache\Storage
  *  @author Platine Developers Team
  *  @copyright  Copyright (c) 2020
  *  @license    http://opensource.org/licenses/MIT  MIT License
@@ -44,16 +44,16 @@
 
 declare(strict_types=1);
 
-namespace Platine\Cache;
+namespace Platine\Cache\Storage;
 
 use DateInterval;
 use Platine\Cache\Exception\CacheException;
 
 /**
- * Class CacheInterface
- * @package Platine\Cache
+ * Class StorageInterface
+ * @package Platine\Cache\Storage
  */
-interface CacheInterface
+interface StorageInterface
 {
 
     /**
@@ -64,8 +64,7 @@ interface CacheInterface
      *
      * @return mixed The value of the item from the cache, or $default in case of cache miss.
      *
-     * @throws CacheException
-     *   MUST be thrown if the $key string is not a legal value.
+     * @throws CacheException MUST be thrown if the $key string is not a legal value.
      */
     public function get(string $key, $default = null);
 

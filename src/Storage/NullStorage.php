@@ -28,11 +28,54 @@
  * SOFTWARE.
  */
 
+/**
+ *  @file NullStorage.php
+ *
+ *  The Null Cache Driver for test purpose
+ *
+ *  @package    Platine\Cache\Storage
+ *  @author Platine Developers Team
+ *  @copyright  Copyright (c) 2020
+ *  @license    http://opensource.org/licenses/MIT  MIT License
+ *  @link   http://www.iacademy.cf
+ *  @version 1.0.0
+ *  @filesource
+ */
+
 declare(strict_types=1);
 
-namespace Platine\Cache\Exception;
+namespace Platine\Cache\Storage;
 
-class FileCacheException extends CacheException
+
+/**
+ * Class NullStorage
+ * @package Platine\Cache\Storage
+ */
+class NullStorage implements StorageInterface
 {
 
+    public function clear(): bool
+    {
+        return false;
+    }
+
+    public function delete(string $key): bool
+    {
+        return false;
+    }
+
+    public function get(string $key, $default = null)
+    {
+        return false;
+    }
+
+    public function has(string $key): bool
+    {
+        return false;
+    }
+
+    public function set(string $key, $value, $ttl = null): bool
+    {
+        return false;
+    }
 }

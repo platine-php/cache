@@ -29,11 +29,11 @@
  */
 
 /**
- *  @file AbstractCache.php
+ *  @file AbstractStorage.php
  *
- *  The AbstractCache class contains the implementation of common cache features
+ *  The base storage class that contains the implementation of common features
  *
- *  @package    Platine\Cache
+ *  @package    Platine\Cache\Storage
  *  @author Platine Developers Team
  *  @copyright  Copyright (c) 2020
  *  @license    http://opensource.org/licenses/MIT  MIT License
@@ -42,86 +42,44 @@
  *  @filesource
  */
 
-
 declare(strict_types=1);
 
-namespace Platine\Cache;
+namespace Platine\Cache\Storage;
 
-use Platine\Cache\Exception\CacheException;
+use DateInterval;
+use DateTimeImmutable;
+use Platine\Cache\Configuration;
 
-abstract class AbstractCache implements CacheInterface
+/**
+ * Class AbstractStorage
+ * @package Platine\Cache\Storage
+ */
+abstract class AbstractStorage implements StorageInterface
 {
 
     /**
-     * The default time to live for cache data
-     * @var integer
+     * The cache configuration
+     * @var Configuration
      */
-    protected int $defaultTtl;
+    protected Configuration $config;
 
     /**
      * Create new instance
-     *
-     * @param int $defaultTtl the value of default time to live to use
+     * @param Configuration $config
      */
-    public function __construct(int $defaultTtl = 600)
+    public function __construct(Configuration $config)
     {
-        $this->defaultTtl = $defaultTtl;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function get(string $key, $default = null);
-
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function set(string $key, $value, $ttl = null): bool;
-
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function delete(string $key): bool;
-
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function clear(): bool;
-
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function has(string $key): bool;
-
-    /**
-     * Validate the cache key
-     * @param  string $key the key name
-     * @return void
-     *
-     * @throws CacheException if key is invalid
-     */
-    protected function validateKey(string $key): void
-    {
-        //PSR-16 reserved caracters
-        $reservedPsr16Keys = '/\{|\}|\(|\)|\/|\\\\|\@|\:/u';
-
-        if ($key === '') {
-            throw new CacheException('Invalid cache key, can not be null or empty');
-        }
-
-        if (preg_match($reservedPsr16Keys, $key, $matches)) {
-            throw new CacheException(sprintf('Invalid caracter [%s] in cache key [%s]', $matches[0], $key));
-        }
+        $this->config = $config;
     }
 
     /**
      * Convert the DateInterval to Unix timestamp
-     * @param  \DateInterval $date
+     * @param  DateInterval $date
      * @return int              the number of second
      */
-    protected function convertDateIntervalToSeconds(\DateInterval $date): int
+    protected function convertDateIntervalToSeconds(DateInterval $date): int
     {
-        $ref = new \DateTimeImmutable();
+        $ref = new DateTimeImmutable();
         $time = $ref->add($date);
 
         return $time->getTimestamp() - $ref->getTimestamp();

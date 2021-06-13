@@ -29,11 +29,11 @@
  */
 
 /**
- *  @file ApcCache.php
+ *  @file ApcuStorage.php
  *
- *  The Cache Driver using APCu extension to manage the cache data
+ *  The Cache Storage using APCu extension to manage the cache data
  *
- *  @package    Platine\Cache
+ *  @package    Platine\Cache\Storage
  *  @author Platine Developers Team
  *  @copyright  Copyright (c) 2020
  *  @license    http://opensource.org/licenses/MIT  MIT License
@@ -44,11 +44,18 @@
 
 declare(strict_types=1);
 
-namespace Platine\Cache;
+namespace Platine\Cache\Storage;
 
+use DateInterval;
+use Platine\Cache\Configuration;
 use Platine\Cache\Exception\CacheException;
+use Platine\Cache\Storage\AbstractStorage;
 
-class ApcuCache extends AbstractCache
+/**
+ * Class ApcuStorage
+ * @package Platine\Cache\Storage
+ */
+class ApcuStorage extends AbstractStorage
 {
 
     /**
@@ -56,14 +63,14 @@ class ApcuCache extends AbstractCache
      *
      * Create new instance
      */
-    public function __construct(int $defaultTtl = 600)
+    public function __construct(Configuration $config)
     {
         if ((!extension_loaded('apcu')) || !((bool) ini_get('apc.enabled'))) {
             throw new CacheException('The cache for APCu driver is not available.'
                             . ' Check if APCu extension is loaded and enabled.');
         }
 
-        parent::__construct($defaultTtl);
+        parent::__construct($config);
     }
 
     /**
@@ -71,8 +78,6 @@ class ApcuCache extends AbstractCache
      */
     public function get(string $key, $default = null)
     {
-        $this->validateKey($key);
-
         $success = false;
         /** @var mixed */
         $data = apcu_fetch($key, $success);
@@ -85,11 +90,9 @@ class ApcuCache extends AbstractCache
      */
     public function set(string $key, $value, $ttl = null): bool
     {
-        $this->validateKey($key);
-
         if ($ttl === null) {
-            $ttl = $this->defaultTtl;
-        } elseif ($ttl instanceof \DateInterval) {
+            $ttl = $this->config->getTtl();
+        } elseif ($ttl instanceof DateInterval) {
             $ttl = $this->convertDateIntervalToSeconds($ttl);
         } elseif (!is_int($ttl)) {
             throw new CacheException(sprintf(
@@ -106,8 +109,6 @@ class ApcuCache extends AbstractCache
      */
     public function delete(string $key): bool
     {
-        $this->validateKey($key);
-
         return apcu_delete($key) === true;
     }
 
@@ -125,8 +126,6 @@ class ApcuCache extends AbstractCache
      */
     public function has(string $key): bool
     {
-        $this->validateKey($key);
-
         return apcu_exists($key) === true;
     }
 }

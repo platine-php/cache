@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Platine\Test\Cache;
 
-use Platine\Cache\FileCache;
 use Platine\Cache\Cache;
-use Platine\PlatineTestCase;
+use Platine\Cache\Exception\CacheException;
+use Platine\Cache\Storage\LocalStorage;
+use Platine\Cache\Storage\NullStorage;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * Cache class tests
@@ -17,15 +19,45 @@ use Platine\PlatineTestCase;
 class CacheTest extends PlatineTestCase
 {
 
-    public function testConstructorAndCallMethods(): void
+    public function testConstructorDefault(): void
     {
-        $fileCache = $this->getMockBuilder(FileCache::class)
-                ->setMethods(array('get'))
-                ->getMock();
 
-        $l = new Cache($fileCache);
-        $l->get('key');
-        $mr = $this->getPrivateProtectedAttribute(Cache::class, 'handler');
-        $this->assertInstanceOf(FileCache::class, $mr->getValue($l));
+        $l = new Cache();
+        $this->assertInstanceOf(NullStorage::class, $l->getStorage());
+    }
+
+    public function testConstructorCustomStorage(): void
+    {
+        $local = $this->getMockInstance(LocalStorage::class);
+        $l = new Cache($local);
+        $this->assertInstanceOf(LocalStorage::class, $l->getStorage());
+        $this->assertEquals($local, $l->getStorage());
+    }
+
+    public function testValidateKeyIsEmpty(): void
+    {
+        $l = new Cache();
+        $this->expectException(CacheException::class);
+
+        $this->runPrivateProtectedMethod($l, 'validateKey', array(''));
+    }
+
+    public function testValidateKeyReservedChar(): void
+    {
+         $l = new Cache();
+        $this->expectException(CacheException::class);
+
+        $this->runPrivateProtectedMethod($l, 'validateKey', array('ddff@sdf'));
+    }
+
+    public function testAll(): void
+    {
+
+        $o = new Cache();
+        $this->assertFalse($o->clear());
+        $this->assertFalse($o->delete('foo'));
+        $this->assertFalse($o->get('foo'));
+        $this->assertFalse($o->has('foo'));
+        $this->assertFalse($o->set('foo', 'bar'));
     }
 }

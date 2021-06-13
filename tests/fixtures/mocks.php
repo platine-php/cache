@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Platine\Cache;
+namespace Platine\Cache\Storage;
 
 $mock_glob = false;
 $mock_filemtime_to_int = false;
