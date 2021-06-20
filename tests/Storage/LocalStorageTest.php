@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Platine\Test\Cache;
 
 use DateInterval;
-use InvalidArgumentException;
 use org\bovigo\vfs\vfsStream;
 use Platine\Cache\Configuration;
 use Platine\Cache\Exception\CacheException;
@@ -38,7 +37,14 @@ class LocalStorageTest extends PlatineTestCase
 
     public function testConstructorOne(): void
     {
-        $cfg = new Configuration([]);
+        $cfg = new Configuration([
+            'storages' => [
+                'file' => [
+                    'path' => $this->vfsCachePath->url(),
+                    'prefix' => 'cache_',
+                ],
+            ]
+        ]);
         $adapter = new LocalAdapter($this->vfsCachePath->url());
         $fs = new Filesystem($adapter);
 
@@ -65,7 +71,12 @@ class LocalStorageTest extends PlatineTestCase
         $this->expectException(FilesystemStorageException::class);
         $path = 'path/not/found';
         $cfg = new Configuration([
-            'file_save_path' => $path
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
         ]);
         $adapter = new LocalAdapter(null);
         $fs = new Filesystem($adapter);
@@ -81,7 +92,12 @@ class LocalStorageTest extends PlatineTestCase
 
         chmod($path, 0400);
         $cfg = new Configuration([
-            'file_save_path' => $path
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
         ]);
         $fs = new Filesystem($adapter);
 
@@ -92,7 +108,14 @@ class LocalStorageTest extends PlatineTestCase
     public function testGetFilename(): void
     {
         $path = $this->vfsCachePath->url();
-        $cfg = new Configuration([]);
+        $cfg = new Configuration([
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
+        ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
 
@@ -114,7 +137,14 @@ class LocalStorageTest extends PlatineTestCase
         $mock_file_get_contents_to_data;
 
         $path = $this->vfsCachePath->url();
-        $cfg = new Configuration([]);
+        $cfg = new Configuration([
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
+        ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
         $ls = new LocalStorage($cfg, $fs);
@@ -165,7 +195,12 @@ class LocalStorageTest extends PlatineTestCase
 
         $path = $this->vfsCachePath->url();
         $cfg = new Configuration([
-            'file_save_path' => $path
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
         ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
@@ -191,7 +226,12 @@ class LocalStorageTest extends PlatineTestCase
 
         $path = $this->vfsCachePath->url();
         $cfg = new Configuration([
-            'file_save_path' => $path
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
         ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
@@ -226,7 +266,14 @@ class LocalStorageTest extends PlatineTestCase
                 ->at($this->vfsCachePath)
                 ->setContent(serialize($data));
 
-        $cfg = new Configuration([]);
+        $cfg = new Configuration([
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
+        ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
         $ls = new LocalStorage($cfg, $fs);
@@ -242,7 +289,15 @@ class LocalStorageTest extends PlatineTestCase
         vfsStream::newFile($filename)
                 ->at($this->vfsCachePath)
                 ->setContent(serialize($data));
-        $cfg = new Configuration([]);
+        $cfg = new Configuration([
+            'ttl' => 89,
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
+        ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
         $ls = new LocalStorage($cfg, $fs);
@@ -258,7 +313,14 @@ class LocalStorageTest extends PlatineTestCase
     {
         $this->expectException(CacheException::class);
         $path = $this->vfsCachePath->url();
-        $cfg = new Configuration([]);
+        $cfg = new Configuration([
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
+        ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
         $ls = new LocalStorage($cfg, $fs);
@@ -270,11 +332,18 @@ class LocalStorageTest extends PlatineTestCase
         $key = uniqid();
         $filename = 'cache_' . md5($key) . '.cache';
         $data = array('foo' => 'bar');
-        $vfsFile = vfsStream::newFile($filename)
+        vfsStream::newFile($filename)
                     ->at($this->vfsCachePath)
                     ->setContent(serialize($data));
         $path = $this->vfsCachePath->url();
-        $cfg = new Configuration([]);
+        $cfg = new Configuration([
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
+        ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
         $ls = new LocalStorage($cfg, $fs);
@@ -298,11 +367,18 @@ class LocalStorageTest extends PlatineTestCase
         $key = uniqid();
         $filename = 'cache_' . md5($key) . '.cache';
         $data = array('foo' => 'bar');
-        $vfsFile = vfsStream::newFile($filename)
+        vfsStream::newFile($filename)
                     ->at($this->vfsCachePath)
                     ->setContent(serialize($data));
         $path = $this->vfsCachePath->url();
-        $cfg = new Configuration([]);
+        $cfg = new Configuration([
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
+        ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
         $ls = new LocalStorage($cfg, $fs);
@@ -319,7 +395,14 @@ class LocalStorageTest extends PlatineTestCase
     public function testDeleteFileNotExist(): void
     {
         $path = $this->vfsCachePath->url();
-        $cfg = new Configuration([]);
+        $cfg = new Configuration([
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
+        ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
 
@@ -332,7 +415,12 @@ class LocalStorageTest extends PlatineTestCase
     {
         $path = $this->vfsCachePath->url();
         $cfg = new Configuration([
-            'file_save_path' => $path
+            'storages' => [
+                'file' => [
+                    'path' => $path,
+                    'prefix' => 'cache_',
+                ],
+            ]
         ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);

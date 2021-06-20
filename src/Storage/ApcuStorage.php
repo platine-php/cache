@@ -91,7 +91,7 @@ class ApcuStorage extends AbstractStorage
     public function set(string $key, $value, $ttl = null): bool
     {
         if ($ttl === null) {
-            $ttl = $this->config->getTtl();
+            $ttl = $this->config->get('ttl');
         } elseif ($ttl instanceof DateInterval) {
             $ttl = $this->convertDateIntervalToSeconds($ttl);
         } elseif (!is_int($ttl)) {

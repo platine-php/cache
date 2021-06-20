@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Platine\Test\Cache;
 
 use Platine\Cache\Cache;
+use Platine\Cache\Configuration;
 use Platine\Cache\Exception\CacheException;
-use Platine\Cache\Storage\LocalStorage;
 use Platine\Cache\Storage\NullStorage;
 use Platine\Dev\PlatineTestCase;
 
@@ -21,17 +21,27 @@ class CacheTest extends PlatineTestCase
 
     public function testConstructorDefault(): void
     {
-
         $l = new Cache();
         $this->assertInstanceOf(NullStorage::class, $l->getStorage());
     }
 
-    public function testConstructorCustomStorage(): void
+    public function testConstructorCustomConfiguration(): void
     {
-        $local = $this->getMockInstance(LocalStorage::class);
-        $l = new Cache($local);
-        $this->assertInstanceOf(LocalStorage::class, $l->getStorage());
-        $this->assertEquals($local, $l->getStorage());
+        $cfg = new Configuration([
+            'ttl' => 34,
+            'driver' => 'null',
+            'storages' => [
+                'null' => [
+                    'class' => NullStorage::class,
+                ],
+            ]
+        ]);
+
+        $l = new Cache($cfg);
+        $this->assertInstanceOf(NullStorage::class, $l->getStorage());
+        $conf = $this->getPropertyValue(Cache::class, $l, 'config');
+        $this->assertInstanceOf(Configuration::class, $conf);
+        $this->assertEquals($cfg, $conf);
     }
 
     public function testValidateKeyIsEmpty(): void

@@ -46,7 +46,6 @@ declare(strict_types=1);
 
 namespace Platine\Cache\Storage;
 
-
 /**
  * Class NullStorage
  * @package Platine\Cache\Storage

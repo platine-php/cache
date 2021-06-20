@@ -107,7 +107,10 @@ class ApcuStorageTest extends PlatineTestCase
         $mock_ini_get_to_true = true;
         $mock_apcu_store_to_true = true;
 
-        $cfg = $this->getMockInstance(Configuration::class);
+        $cfg = new Configuration([
+            'ttl' => 89,
+            'storages' => []
+        ]);
 
         $ac = new ApcuStorage($cfg);
         $result = $ac->set($key, $data);
@@ -157,7 +160,10 @@ class ApcuStorageTest extends PlatineTestCase
         $mock_ini_get_to_true = true;
         $mock_apcu_store_to_false = true;
 
-        $cfg = $this->getMockInstance(Configuration::class);
+        $cfg = new Configuration([
+            'ttl' => 89,
+            'storages' => []
+        ]);
 
         $ac = new ApcuStorage($cfg);
         $result = $ac->set('key', 'data');

@@ -56,59 +56,22 @@ class Configuration extends AbstractConfiguration
 {
 
     /**
-     * The default time to live for cache data
-     * @var int
-     */
-    protected int $ttl = 300;
-
-    /**
-     * The path to use to save cache files
-     * @var string
-     */
-    protected string $fileSavePath = '';
-
-    /**
-     * The cache file prefix
-     * @var string
-     */
-    protected string $filePrefix = 'cache_';
-
-    /**
-     * Return the cache time to live
-     * @return int
-     */
-    public function getTtl(): int
-    {
-        return $this->ttl;
-    }
-
-    /**
-     * Return the file storage path
-     * @return string
-     */
-    public function getFileSavePath(): string
-    {
-        return $this->fileSavePath;
-    }
-
-    /**
-     * Return the cache file prefix
-     * @return string
-     */
-    public function getFilePrefix(): string
-    {
-        return $this->filePrefix;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getValidationRules(): array
     {
         return [
             'ttl' => 'integer',
-            'fileSavePath' => 'string',
-            'filePrefix' => 'string',
+            'driver' => 'string',
+            'storages' => 'array',
+            'storages.file' => 'array',
+            'storages.file.path' => 'string',
+            'storages.file.prefix' => 'string',
+            'storages.file.class' => 'string',
+            'storages.apcu' => 'array',
+            'storages.apcu.class' => 'string',
+            'storages.null' => 'array',
+            'storages.null.class' => 'string',
         ];
     }
 }

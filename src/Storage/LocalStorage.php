@@ -87,7 +87,7 @@ class LocalStorage extends AbstractStorage
 
         $this->filesystem = $filesystem;
 
-        $filePath = Path::normalizePathDS($config->getFileSavePath(), true);
+        $filePath = Path::normalizePathDS($config->get('storages.file.path'), true);
         $directory = $filesystem->directory($filePath);
         if (!$directory->exists() || !$directory->isWritable()) {
             throw new FilesystemStorageException(sprintf(
@@ -105,10 +105,7 @@ class LocalStorage extends AbstractStorage
      */
     public function get(string $key, $default = null)
     {
-        $filename = $this->getFileName($key);
-        $file = $this->filesystem->file(
-            $this->directory->getPath() . DIRECTORY_SEPARATOR . $filename
-        );
+        $file = $this->getCacheFile($key);
 
         if (!$file->exists() || $file->getMtime() <= time()) {
             return $default;
@@ -136,7 +133,7 @@ class LocalStorage extends AbstractStorage
     public function set(string $key, $value, $ttl = null): bool
     {
         if ($ttl === null) {
-            $ttl = $this->config->getTtl();
+            $ttl = $this->config->get('ttl');
         } elseif ($ttl instanceof DateInterval) {
             $ttl = $this->convertDateIntervalToSeconds($ttl);
         } elseif (!is_int($ttl)) {
@@ -147,14 +144,8 @@ class LocalStorage extends AbstractStorage
         }
         /** @var int */
         $expireAt = time() + $ttl;
-
-        $filename = $this->getFileName($key);
-        $file = $this->filesystem->file(
-            $this->directory->getPath() . DIRECTORY_SEPARATOR . $filename
-        );
-
+        $file = $this->getCacheFile($key);
         $file->write(serialize($value));
-
         $file->touch($expireAt);
 
         return true;
@@ -165,10 +156,7 @@ class LocalStorage extends AbstractStorage
      */
     public function delete(string $key): bool
     {
-        $filename = $this->getFileName($key);
-        $file = $this->filesystem->file(
-            $this->directory->getPath() . DIRECTORY_SEPARATOR . $filename
-        );
+        $file = $this->getCacheFile($key);
 
         if ($file->exists()) {
             $file->delete();
@@ -184,7 +172,12 @@ class LocalStorage extends AbstractStorage
     {
         $files = $this->directory->read(DirectoryInterface::FILE);
         foreach ($files as /** @var FileInterface $file */ $file) {
-            if (Str::startsWith($this->config->getFilePrefix(), $file->getName())) {
+            if (
+                Str::startsWith(
+                    $this->config->get('storages.file.prefix'),
+                    $file->getName()
+                )
+            ) {
                 $file->delete();
             }
         }
@@ -201,12 +194,27 @@ class LocalStorage extends AbstractStorage
     }
 
     /**
+     * Return the file cache
+     * @param string $key
+     * @return FileInterface
+     */
+    protected function getCacheFile(string $key): FileInterface
+    {
+        $filename = $this->getFileName($key);
+        $file = $this->filesystem->file(
+            $this->directory->getPath() . DIRECTORY_SEPARATOR . $filename
+        );
+
+        return $file;
+    }
+
+    /**
      * Get cache file name for given key
      * @param  string $key
      * @return string      the filename
      */
     private function getFileName(string $key): string
     {
-        return sprintf('%s%s.cache', $this->config->getFilePrefix(), md5($key));
+        return sprintf('%s%s.cache', $this->config->get('storages.file.prefix'), md5($key));
     }
 }

@@ -64,12 +64,31 @@ class Cache implements CacheInterface
     protected StorageInterface $storage;
 
     /**
-     * Create new instance
-     * @param StorageInterface|null $storage the cache storage to use
+     * The configuration instance
+     * @var Configuration
      */
-    public function __construct(?StorageInterface $storage = null)
+    protected Configuration $config;
+
+    /**
+     * Create new instance
+     * @param Configuration|null $config the cache configuration to use
+     */
+    public function __construct(?Configuration $config = null)
     {
-        $this->storage = $storage ?? new NullStorage();
+        $this->config = $config ?? new Configuration([
+            'ttl' => 300,
+            'driver' => 'null',
+            'storages' => [
+                'null' => [
+                    'class' => NullStorage::class,
+                ],
+            ]
+        ]);
+
+        $storageName = $this->config->get('driver');
+        $key = sprintf('storages.%s.class', $storageName);
+        $class = $this->config->get($key);
+        $this->storage = new $class($this->config);
     }
 
     /**
