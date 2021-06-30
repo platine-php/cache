@@ -81,13 +81,13 @@ class LocalStorage extends AbstractStorage
      *
      * {@inheritdoc}
      */
-    public function __construct(Configuration $config, Filesystem $filesystem)
+    public function __construct(Filesystem $filesystem, ?Configuration $config = null)
     {
         parent::__construct($config);
 
         $this->filesystem = $filesystem;
 
-        $filePath = Path::normalizePathDS($config->get('storages.file.path'), true);
+        $filePath = Path::normalizePathDS($this->config->get('storages.file.path'), true);
         $directory = $filesystem->directory($filePath);
         if (!$directory->exists() || !$directory->isWritable()) {
             throw new FilesystemStorageException(sprintf(

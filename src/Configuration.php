@@ -74,4 +74,24 @@ class Configuration extends AbstractConfiguration
             'storages.null.class' => 'string',
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefault(): array
+    {
+        return [
+        'ttl' => 300,
+        'driver' => 'null',
+        'storages' => [
+            'file' => [
+                'path' => '',
+                'prefix' => 'cache_',
+            ],
+            'apcu' => [],
+            'null' => [],
+        ]
+
+        ];
+    }
 }

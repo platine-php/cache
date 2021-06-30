@@ -48,7 +48,7 @@ class LocalStorageTest extends PlatineTestCase
         $adapter = new LocalAdapter($this->vfsCachePath->url());
         $fs = new Filesystem($adapter);
 
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
 
         $this->assertInstanceOf(
             DirectoryInterface::class,
@@ -81,7 +81,7 @@ class LocalStorageTest extends PlatineTestCase
         $adapter = new LocalAdapter(null);
         $fs = new Filesystem($adapter);
 
-        (new LocalStorage($cfg, $fs));
+        (new LocalStorage($fs, $cfg));
     }
 
     public function testConstructorDirectoryNotWritable(): void
@@ -101,7 +101,7 @@ class LocalStorageTest extends PlatineTestCase
         ]);
         $fs = new Filesystem($adapter);
 
-        (new LocalStorage($cfg, $fs));
+        (new LocalStorage($fs, $cfg));
     }
 
 
@@ -119,7 +119,7 @@ class LocalStorageTest extends PlatineTestCase
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
 
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
 
         $key = 'foo';
         $file = $this->runPrivateProtectedMethod($ls, 'getFileName', array($key));
@@ -147,7 +147,7 @@ class LocalStorageTest extends PlatineTestCase
         ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
 
         //Default value
         $this->assertEquals('bar', $ls->get('not_found_key', 'bar'));
@@ -213,7 +213,7 @@ class LocalStorageTest extends PlatineTestCase
                 ->at($this->vfsCachePath)
                 ->setContent(serialize($data));
 
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
 
         $this->assertEquals('bar', $ls->get($key, 'bar'));
     }
@@ -243,7 +243,7 @@ class LocalStorageTest extends PlatineTestCase
                 ->at($this->vfsCachePath)
                 ->setContent(serialize($data));
 
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
         $content = $ls->get($key);
         $this->assertEquals($data, $content);
     }
@@ -276,7 +276,7 @@ class LocalStorageTest extends PlatineTestCase
         ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
         $this->assertTrue($ls->has($key));
     }
 
@@ -300,7 +300,7 @@ class LocalStorageTest extends PlatineTestCase
         ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
         $result = $ls->set($key, $data);
         $this->assertTrue($result);
         $this->assertEquals(
@@ -323,7 +323,7 @@ class LocalStorageTest extends PlatineTestCase
         ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
         $ls->set('key', 'data', []);
     }
 
@@ -346,7 +346,7 @@ class LocalStorageTest extends PlatineTestCase
         ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
         $result = $ls->set($key, $data, new DateInterval('PT4H'));
         $this->assertTrue($result);
         $this->assertEquals(
@@ -381,7 +381,7 @@ class LocalStorageTest extends PlatineTestCase
         ]);
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
 
         $content1 = $ls->get($key);
         $this->assertEquals($data, $content1);
@@ -406,7 +406,7 @@ class LocalStorageTest extends PlatineTestCase
         $adapter = new LocalAdapter($path);
         $fs = new Filesystem($adapter);
 
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
 
         $this->assertTrue($ls->delete('key_not_found'));
     }
@@ -432,7 +432,7 @@ class LocalStorageTest extends PlatineTestCase
                 ->at($this->vfsCachePath)
                 ->setContent(serialize($data));
 
-        $ls = new LocalStorage($cfg, $fs);
+        $ls = new LocalStorage($fs, $cfg);
 
         $this->assertTrue($ls->clear());
     }

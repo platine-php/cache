@@ -25,23 +25,13 @@ class CacheTest extends PlatineTestCase
         $this->assertInstanceOf(NullStorage::class, $l->getStorage());
     }
 
-    public function testConstructorCustomConfiguration(): void
+    public function testConstructorCustomStorage(): void
     {
-        $cfg = new Configuration([
-            'ttl' => 34,
-            'driver' => 'null',
-            'storages' => [
-                'null' => [
-                    'class' => NullStorage::class,
-                ],
-            ]
-        ]);
+        $storage = new NullStorage();
 
-        $l = new Cache($cfg);
+        $l = new Cache($storage);
         $this->assertInstanceOf(NullStorage::class, $l->getStorage());
-        $conf = $this->getPropertyValue(Cache::class, $l, 'config');
-        $this->assertInstanceOf(Configuration::class, $conf);
-        $this->assertEquals($cfg, $conf);
+        $this->assertEquals($storage, $l->getStorage());
     }
 
     public function testValidateKeyIsEmpty(): void
