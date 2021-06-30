@@ -67,11 +67,8 @@ class Configuration extends AbstractConfiguration
             'storages.file' => 'array',
             'storages.file.path' => 'string',
             'storages.file.prefix' => 'string',
-            'storages.file.class' => 'string',
             'storages.apcu' => 'array',
-            'storages.apcu.class' => 'string',
             'storages.null' => 'array',
-            'storages.null.class' => 'string',
         ];
     }
 
