@@ -18,7 +18,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class ApcuStorageTest extends PlatineTestCase
 {
-
     public function testConstructorExtensionIsNotLoaded(): void
     {
         global $mock_extension_loaded_to_false;

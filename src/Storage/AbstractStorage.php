@@ -56,7 +56,6 @@ use Platine\Cache\Configuration;
  */
 abstract class AbstractStorage implements StorageInterface
 {
-
     /**
      * The cache configuration
      * @var Configuration

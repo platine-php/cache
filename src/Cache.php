@@ -56,7 +56,6 @@ use Platine\Cache\Storage\StorageInterface;
  */
 class Cache implements CacheInterface
 {
-
     /**
      * The cache storage to use
      * @var StorageInterface

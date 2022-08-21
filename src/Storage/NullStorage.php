@@ -52,7 +52,6 @@ namespace Platine\Cache\Storage;
  */
 class NullStorage implements StorageInterface
 {
-
     public function clear(): bool
     {
         return false;

@@ -57,7 +57,6 @@ use Platine\Cache\Storage\AbstractStorage;
  */
 class ApcuStorage extends AbstractStorage
 {
-
     /**
      * {@inheritdoc}
      *

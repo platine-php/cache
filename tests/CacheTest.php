@@ -18,7 +18,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class CacheTest extends PlatineTestCase
 {
-
     public function testConstructorDefault(): void
     {
         $l = new Cache();

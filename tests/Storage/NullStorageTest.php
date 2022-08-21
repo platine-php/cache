@@ -15,7 +15,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class NullStorageTest extends PlatineTestCase
 {
-
     public function testAll(): void
     {
         $o = new NullStorage();

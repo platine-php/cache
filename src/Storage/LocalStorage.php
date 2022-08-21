@@ -63,7 +63,6 @@ use Platine\Stdlib\Helper\Str;
  */
 class LocalStorage extends AbstractStorage
 {
-
      /**
      * The directory to use to save cache files
      * @var DirectoryInterface
@@ -215,6 +214,7 @@ class LocalStorage extends AbstractStorage
      */
     private function getFileName(string $key): string
     {
-        return sprintf('%s%s.cache', $this->config->get('storages.file.prefix'), md5($key));
+        $cleanKey = preg_replace('/[^A-Za-z0-9\.]+/', '_', $key);
+        return sprintf('%s%s.cache', $this->config->get('storages.file.prefix'), $cleanKey);
     }
 }

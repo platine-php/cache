@@ -23,7 +23,6 @@ use Platine\Filesystem\Filesystem;
  */
 class LocalStorageTest extends PlatineTestCase
 {
-
     protected $vfsRoot;
     protected $vfsCachePath;
 
@@ -78,7 +77,7 @@ class LocalStorageTest extends PlatineTestCase
                 ],
             ]
         ]);
-        $adapter = new LocalAdapter(null);
+        $adapter = new LocalAdapter('');
         $fs = new Filesystem($adapter);
 
         (new LocalStorage($fs, $cfg));
@@ -124,7 +123,7 @@ class LocalStorageTest extends PlatineTestCase
         $key = 'foo';
         $file = $this->runPrivateProtectedMethod($ls, 'getFileName', array($key));
 
-        $this->assertEquals($file, 'cache_' . md5($key) . '.cache');
+        $this->assertEquals($file, 'cache_foo.cache');
     }
 
     public function testGet(): void
@@ -237,7 +236,7 @@ class LocalStorageTest extends PlatineTestCase
         $fs = new Filesystem($adapter);
 
         $key = uniqid();
-        $filename = 'cache_' . md5($key) . '.cache';
+        $filename = 'cache_' . $key . '.cache';
         $data = array('foo' => 'bar');
         vfsStream::newFile($filename)
                 ->at($this->vfsCachePath)
@@ -259,7 +258,7 @@ class LocalStorageTest extends PlatineTestCase
 
         //Return correct data
         $key = uniqid();
-        $filename = 'cache_' . md5($key) . '.cache';
+        $filename = 'cache_' . $key . '.cache';
         $path = $this->vfsCachePath->url();
         $data = array('foo' => 'bar');
         vfsStream::newFile($filename)
@@ -365,7 +364,7 @@ class LocalStorageTest extends PlatineTestCase
         $mock_filemtime_to_int = true;
 
         $key = uniqid();
-        $filename = 'cache_' . md5($key) . '.cache';
+        $filename = 'cache_' . $key . '.cache';
         $data = array('foo' => 'bar');
         vfsStream::newFile($filename)
                     ->at($this->vfsCachePath)

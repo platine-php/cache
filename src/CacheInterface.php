@@ -55,7 +55,6 @@ use Platine\Cache\Exception\CacheException;
  */
 interface CacheInterface
 {
-
     /**
      * Fetches a value from the cache.
      *
