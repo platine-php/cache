@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Platine\Test\Cache;
 
 use Platine\Cache\Cache;
-use Platine\Cache\Configuration;
 use Platine\Cache\Exception\CacheException;
 use Platine\Cache\Storage\NullStorage;
 use Platine\Dev\PlatineTestCase;
