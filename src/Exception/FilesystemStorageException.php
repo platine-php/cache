@@ -33,7 +33,7 @@ declare(strict_types=1);
 namespace Platine\Cache\Exception;
 
 /**
- * Class FilesystemStorageException
+ * @class FilesystemStorageException
  * @package Platine\Cache\Exception
  */
 class FilesystemStorageException extends CacheException

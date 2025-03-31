@@ -52,7 +52,7 @@ use Platine\Cache\Exception\CacheException;
 use Platine\Cache\Storage\AbstractStorage;
 
 /**
- * Class ApcuStorage
+ * @class ApcuStorage
  * @package Platine\Cache\Storage
  */
 class ApcuStorage extends AbstractStorage
@@ -75,7 +75,7 @@ class ApcuStorage extends AbstractStorage
     /**
      * {@inheritdoc}
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         $success = false;
         /** @var mixed */
@@ -87,18 +87,14 @@ class ApcuStorage extends AbstractStorage
     /**
      * {@inheritdoc}
      */
-    public function set(string $key, $value, $ttl = null): bool
+    public function set(string $key, mixed $value, int|DateInterval|null $ttl = null): bool
     {
         if ($ttl === null) {
             $ttl = $this->config->get('ttl');
         } elseif ($ttl instanceof DateInterval) {
             $ttl = $this->convertDateIntervalToSeconds($ttl);
-        } elseif (!is_int($ttl)) {
-            throw new CacheException(sprintf(
-                'Invalid cache TTL value expected null|int|DateInterval but got [%s]',
-                gettype($ttl)
-            ));
         }
+
         /** @var bool */
         return apcu_store($key, $value, $ttl);
     }

@@ -50,7 +50,7 @@ use DateInterval;
 use Platine\Cache\Exception\CacheException;
 
 /**
- * Class StorageInterface
+ * @class StorageInterface
  * @package Platine\Cache\Storage
  */
 interface StorageInterface
@@ -58,21 +58,21 @@ interface StorageInterface
     /**
      * Fetches a value from the cache.
      *
-     * @param string $key     The unique key of this item in the cache.
+     * @param string $key The unique key of this item in the cache.
      * @param mixed  $default Default value to return if the key does not exist.
      *
      * @return mixed The value of the item from the cache, or $default in case of cache miss.
      *
      * @throws CacheException MUST be thrown if the $key string is not a legal value.
      */
-    public function get(string $key, $default = null);
+    public function get(string $key, mixed $default = null): mixed;
 
     /**
      * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
      *
-     * @param string                 $key   The key of the item to store.
-     * @param mixed                  $value The value of the item to store. Must be serializable.
-     * @param null|int|DateInterval $ttl   Optional. The TTL value of this item. If no value is sent and
+     * @param string $key   The key of the item to store.
+     * @param mixed $value The value of the item to store. Must be serializable.
+     * @param null|int|DateInterval $ttl Optional. The TTL value of this item. If no value is sent and
      *                                      the driver supports TTL then the library may set a default value
      *                                      for it or let the driver take care of that.
      *
@@ -81,7 +81,7 @@ interface StorageInterface
      * @throws CacheException
      *   MUST be thrown if the $key string is not a legal value.
      */
-    public function set(string $key, $value, $ttl = null): bool;
+    public function set(string $key, mixed $value, int|DateInterval|null $ttl = null): bool;
 
     /**
      * Delete an item from the cache by its unique key.
@@ -90,8 +90,7 @@ interface StorageInterface
      *
      * @return bool True if the item was successfully removed. False if there was an error.
      *
-     * @throws CacheException
-     *   MUST be thrown if the $key string is not a legal value.
+     * @throws CacheException MUST be thrown if the $key string is not a legal value.
      */
     public function delete(string $key): bool;
 

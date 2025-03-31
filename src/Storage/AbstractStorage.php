@@ -51,7 +51,7 @@ use DateTimeImmutable;
 use Platine\Cache\Configuration;
 
 /**
- * Class AbstractStorage
+ * @class AbstractStorage
  * @package Platine\Cache\Storage
  */
 abstract class AbstractStorage implements StorageInterface
@@ -74,7 +74,7 @@ abstract class AbstractStorage implements StorageInterface
     /**
      * Convert the DateInterval to Unix timestamp
      * @param  DateInterval $date
-     * @return int              the number of second
+     * @return int the number of second
      */
     protected function convertDateIntervalToSeconds(DateInterval $date): int
     {

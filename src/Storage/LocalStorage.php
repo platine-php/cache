@@ -48,7 +48,6 @@ namespace Platine\Cache\Storage;
 
 use DateInterval;
 use Platine\Cache\Configuration;
-use Platine\Cache\Exception\CacheException;
 use Platine\Cache\Exception\FilesystemStorageException;
 use Platine\Filesystem\DirectoryInterface;
 use Platine\Filesystem\FileInterface;
@@ -58,7 +57,7 @@ use Platine\Stdlib\Helper\Str;
 
 
 /**
- * Class LocalStorage
+ * @class LocalStorage
  * @package Platine\Cache\Storage
  */
 class LocalStorage extends AbstractStorage
@@ -91,7 +90,7 @@ class LocalStorage extends AbstractStorage
         if (!$directory->exists() || !$directory->isWritable()) {
             throw new FilesystemStorageException(sprintf(
                 'Cannot use file cache handler, because the directory %s does '
-                    . 'not exist or is writable',
+                    . 'not exist or is not writable',
                 $filePath
             ));
         }
@@ -102,7 +101,7 @@ class LocalStorage extends AbstractStorage
     /**
      * {@inheritdoc}
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         $file = $this->getCacheFile($key);
 
@@ -129,18 +128,15 @@ class LocalStorage extends AbstractStorage
     /**
      * {@inheritdoc}
      */
-    public function set(string $key, $value, $ttl = null): bool
+    public function set(string $key, $value, int|DateInterval|null $ttl = null): bool
     {
         if ($ttl === null) {
             $ttl = $this->config->get('ttl');
         } elseif ($ttl instanceof DateInterval) {
             $ttl = $this->convertDateIntervalToSeconds($ttl);
-        } elseif (!is_int($ttl)) {
-            throw new CacheException(sprintf(
-                'Invalid cache TTL value expected null|int|DateInterval but got [%s]',
-                gettype($ttl)
-            ));
         }
+
+
         /** @var int */
         $expireAt = time() + $ttl;
         $file = $this->getCacheFile($key);
@@ -215,6 +211,10 @@ class LocalStorage extends AbstractStorage
     private function getFileName(string $key): string
     {
         $cleanKey = preg_replace('/[^A-Za-z0-9\.]+/', '_', $key);
-        return sprintf('%s%s.cache', $this->config->get('storages.file.prefix'), $cleanKey);
+        return sprintf(
+            '%s%s.cache',
+            $this->config->get('storages.file.prefix'),
+            $cleanKey
+        );
     }
 }

@@ -116,19 +116,6 @@ class ApcuStorageTest extends PlatineTestCase
         $this->assertTrue($result);
     }
 
-    public function testSetInvalidTtl(): void
-    {
-        global $mock_extension_loaded_to_true, $mock_ini_get_to_true;
-        $this->expectException(CacheException::class);
-        $mock_extension_loaded_to_true = true;
-        $mock_ini_get_to_true = true;
-
-        $cfg = $this->getMockInstance(Configuration::class);
-
-        $ac = new ApcuStorage($cfg);
-        $ac->set('key', 'data', []);
-    }
-
     public function testSetTtlIsDateInterval(): void
     {
         global $mock_extension_loaded_to_true,

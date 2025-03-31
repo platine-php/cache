@@ -46,8 +46,10 @@ declare(strict_types=1);
 
 namespace Platine\Cache\Storage;
 
+use DateInterval;
+
 /**
- * Class NullStorage
+ * @class NullStorage
  * @package Platine\Cache\Storage
  */
 class NullStorage implements StorageInterface
@@ -62,7 +64,7 @@ class NullStorage implements StorageInterface
         return false;
     }
 
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         return false;
     }
@@ -72,7 +74,7 @@ class NullStorage implements StorageInterface
         return false;
     }
 
-    public function set(string $key, $value, $ttl = null): bool
+    public function set(string $key, mixed $value, int|DateInterval|null $ttl = null): bool
     {
         return false;
     }

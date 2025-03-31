@@ -308,24 +308,6 @@ class LocalStorageTest extends PlatineTestCase
         );
     }
 
-    public function testSetInvalidTtl(): void
-    {
-        $this->expectException(CacheException::class);
-        $path = $this->vfsCachePath->url();
-        $cfg = new Configuration([
-            'storages' => [
-                'file' => [
-                    'path' => $path,
-                    'prefix' => 'cache_',
-                ],
-            ]
-        ]);
-        $adapter = new LocalAdapter($path);
-        $fs = new Filesystem($adapter);
-        $ls = new LocalStorage($fs, $cfg);
-        $ls->set('key', 'data', []);
-    }
-
     public function testSetTtlIsDateInterval(): void
     {
         $key = uniqid();

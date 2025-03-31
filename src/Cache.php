@@ -46,12 +46,13 @@ declare(strict_types=1);
 
 namespace Platine\Cache;
 
+use DateInterval;
 use Platine\Cache\Exception\CacheException;
 use Platine\Cache\Storage\NullStorage;
 use Platine\Cache\Storage\StorageInterface;
 
 /**
- * Class Cache
+ * @class Cache
  * @package Platine\Cache
  */
 class Cache implements CacheInterface
@@ -101,7 +102,7 @@ class Cache implements CacheInterface
     /**
      * {@inheritdoc}
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         $this->validateKey($key);
 
@@ -121,7 +122,7 @@ class Cache implements CacheInterface
     /**
      * {@inheritdoc}
      */
-    public function set(string $key, $value, $ttl = null): bool
+    public function set(string $key, mixed $value, int|DateInterval|null $ttl = null): bool
     {
         $this->validateKey($key);
 

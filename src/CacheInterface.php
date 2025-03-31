@@ -50,7 +50,7 @@ use DateInterval;
 use Platine\Cache\Exception\CacheException;
 
 /**
- * Class CacheInterface
+ * @class CacheInterface
  * @package Platine\Cache
  */
 interface CacheInterface
@@ -63,26 +63,24 @@ interface CacheInterface
      *
      * @return mixed The value of the item from the cache, or $default in case of cache miss.
      *
-     * @throws CacheException
-     *   MUST be thrown if the $key string is not a legal value.
+     * @throws CacheException MUST be thrown if the $key string is not a legal value.
      */
-    public function get(string $key, $default = null);
+    public function get(string $key, mixed $default = null): mixed;
 
     /**
      * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
      *
-     * @param string                 $key   The key of the item to store.
-     * @param mixed                  $value The value of the item to store. Must be serializable.
-     * @param null|int|DateInterval $ttl   Optional. The TTL value of this item. If no value is sent and
+     * @param string $key   The key of the item to store.
+     * @param mixed $value The value of the item to store. Must be serializable.
+     * @param null|int|DateInterval $ttl Optional. The TTL value of this item. If no value is sent and
      *                                      the driver supports TTL then the library may set a default value
      *                                      for it or let the driver take care of that.
      *
      * @return bool True on success and false on failure.
      *
-     * @throws CacheException
-     *   MUST be thrown if the $key string is not a legal value.
+     * @throws CacheException MUST be thrown if the $key string is not a legal value.
      */
-    public function set(string $key, $value, $ttl = null): bool;
+    public function set(string $key, $value, int|DateInterval|null $ttl = null): bool;
 
     /**
      * Delete an item from the cache by its unique key.

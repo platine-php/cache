@@ -35,7 +35,7 @@ namespace Platine\Cache\Exception;
 use Exception;
 
 /**
- * Class CacheException
+ * @class CacheException
  * @package Platine\Cache\Exception
  */
 class CacheException extends Exception
