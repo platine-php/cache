@@ -80,7 +80,7 @@ interface CacheInterface
      *
      * @throws CacheException MUST be thrown if the $key string is not a legal value.
      */
-    public function set(string $key, $value, int|DateInterval|null $ttl = null): bool;
+    public function set(string $key, mixed $value, int|DateInterval|null $ttl = null): bool;
 
     /**
      * Delete an item from the cache by its unique key.

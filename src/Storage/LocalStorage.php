@@ -82,12 +82,11 @@ class LocalStorage extends AbstractStorage
     public function __construct(Filesystem $filesystem, ?Configuration $config = null)
     {
         parent::__construct($config);
-
         $this->filesystem = $filesystem;
 
         $filePath = Path::normalizePathDS($this->config->get('storages.file.path'), true);
         $directory = $filesystem->directory($filePath);
-        if (!$directory->exists() || !$directory->isWritable()) {
+        if ($directory->exists() === false || $directory->isWritable() === false) {
             throw new FilesystemStorageException(sprintf(
                 'Cannot use file cache handler, because the directory %s does '
                     . 'not exist or is not writable',
@@ -128,7 +127,7 @@ class LocalStorage extends AbstractStorage
     /**
      * {@inheritdoc}
      */
-    public function set(string $key, $value, int|DateInterval|null $ttl = null): bool
+    public function set(string $key, mixed $value, int|DateInterval|null $ttl = null): bool
     {
         if ($ttl === null) {
             $ttl = $this->config->get('ttl');

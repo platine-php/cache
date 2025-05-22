@@ -77,17 +77,16 @@ class Configuration extends AbstractConfiguration
     public function getDefault(): array
     {
         return [
-        'ttl' => 300,
-        'driver' => 'null',
-        'storages' => [
-            'file' => [
-                'path' => '',
-                'prefix' => 'cache_',
-            ],
-            'apcu' => [],
-            'null' => [],
-        ]
-
+            'ttl' => 300,
+            'driver' => 'null',
+            'storages' => [
+                'file' => [
+                    'path' => '',
+                    'prefix' => 'cache_',
+                ],
+                'apcu' => [],
+                'null' => [],
+            ]
         ];
     }
 }
