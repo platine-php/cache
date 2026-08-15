@@ -150,7 +150,7 @@ class Cache implements CacheInterface
         $matches = [];
         if (preg_match($reservedPsr16Keys, $key, $matches)) {
             throw new CacheException(sprintf(
-                'Invalid caracter [%s] in cache key [%s]',
+                'Invalid character [%s] in cache key [%s]',
                 $matches[0],
                 $key
             ));
